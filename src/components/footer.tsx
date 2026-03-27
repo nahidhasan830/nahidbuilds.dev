@@ -1,5 +1,6 @@
 import { Mail } from "lucide-react";
 import Link from "next/link";
+import { ContactButton } from "@/components/contact-button";
 import { GithubIcon } from "@/components/icons/github";
 import { LinkedinIcon } from "@/components/icons/linkedin";
 import { Button } from "@/components/ui/button";
@@ -18,9 +19,7 @@ export function Footer() {
           <p className="mt-2 text-muted-foreground">
             Available for freelance projects and full-time opportunities.
           </p>
-          <Button className="mt-6" asChild>
-            <a href={`mailto:${siteConfig.socials.email}`}>Get in touch</a>
-          </Button>
+          <ContactButton />
         </div>
       </div>
 
