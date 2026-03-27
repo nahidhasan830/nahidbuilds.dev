@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect } from "react";
-import { useInView } from "react-intersection-observer";
 import { useActiveSection } from "@/components/active-section-context";
 import { cn } from "@/lib/utils";
 
@@ -14,18 +13,17 @@ export function Section({
   children: React.ReactNode;
   className?: string;
 }) {
-  const { setActiveSection } = useActiveSection();
-  const { ref, inView } = useInView({ threshold: 0.3 });
+  const { registerSection, unregisterSection } = useActiveSection();
 
   useEffect(() => {
-    if (inView && id) {
-      setActiveSection(id);
-      window.history.replaceState(null, "", `#${id}`);
+    if (id) {
+      registerSection(id);
+      return () => unregisterSection(id);
     }
-  }, [inView, id, setActiveSection]);
+  }, [id, registerSection, unregisterSection]);
 
   return (
-    <section ref={ref} id={id} className={cn("py-16 md:py-20", className)}>
+    <section id={id} className={cn("scroll-mt-20 py-16 md:py-20", className)}>
       <div className="container px-6 md:px-12 lg:px-24">{children}</div>
     </section>
   );
