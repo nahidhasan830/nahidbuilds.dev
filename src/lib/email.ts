@@ -1,6 +1,12 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend: Resend | null = null;
+
+function getResend(): Resend | null {
+  if (!process.env.RESEND_API_KEY) return null;
+  if (!resend) resend = new Resend(process.env.RESEND_API_KEY);
+  return resend;
+}
 
 type BaseEmailOptions = {
   to: string | string[];
@@ -24,7 +30,8 @@ export async function sendEmail(
 ): Promise<EmailResult> {
   const { to, subject, replyTo } = options;
 
-  if (!process.env.RESEND_API_KEY) {
+  const client = getResend();
+  if (!client) {
     console.error("RESEND_API_KEY is not configured");
     return { success: false, error: "Email service not configured" };
   }
@@ -33,7 +40,7 @@ export async function sendEmail(
   const html = "html" in options ? options.html : undefined;
 
   try {
-    const { data, error } = await resend.emails.send({
+    const { data, error } = await client.emails.send({
       from: process.env.EMAIL_FROM || "Portfolio <onboarding@resend.dev>",
       to: Array.isArray(to) ? to : [to],
       subject,
