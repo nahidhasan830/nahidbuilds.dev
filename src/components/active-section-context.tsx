@@ -34,18 +34,25 @@ export function ActiveSectionProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const calculateActiveSection = () => {
-      const sections = Array.from(sectionsRef.current);
-      const offset = 100;
+      const sectionIds = Array.from(sectionsRef.current);
+      const offset = 80;
+
+      const sections = sectionIds
+        .map((id) => {
+          const element = document.getElementById(id);
+          if (!element) return null;
+          return { id, top: element.getBoundingClientRect().top };
+        })
+        .filter((s): s is { id: string; top: number } => s !== null)
+        .sort((a, b) => a.top - b.top);
 
       let currentSection: string | null = null;
 
-      for (const id of sections) {
-        const element = document.getElementById(id);
-        if (!element) continue;
-
-        const rect = element.getBoundingClientRect();
-        if (rect.top <= offset && rect.bottom > offset) {
-          currentSection = id;
+      for (const section of sections) {
+        if (section.top <= offset) {
+          currentSection = section.id;
+        } else {
+          break;
         }
       }
 
