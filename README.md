@@ -18,6 +18,7 @@ pnpm dev
 | Styling | Tailwind CSS v4 |
 | Components | shadcn/ui |
 | Linting | Biome |
+| Hosting | Vercel |
 
 ## Scripts
 
@@ -27,43 +28,28 @@ pnpm dev
 | `pnpm build` | Production build |
 | `pnpm lint` | Run Biome linter |
 | `pnpm format` | Format with Biome |
-| `pnpm commit` | Interactive commit (czg) |
-| `pnpm commit:ai` | AI-assisted commit |
-
-## AI Commit
-
-```bash
-pnpm commit:ai                      # Generate from diff
-pnpm commit:ai "fixed nav bug"      # Polish rough message
-pnpm commit:ai --force              # Skip lint
-```
-
-Interactive options:
-- `Enter` - Commit with current message
-- `e` - Edit message
-- `w` - Write message manually
-- `r` - Retry AI generation
-- `p` - Switch provider (Ollama/Gemini)
-- `d` - View diff
-- `s` - Show staged files
-- `q` - Quit
+| `pnpm commit` | Interactive conventional commit |
 
 ## Project Structure
 
 ```
 src/
-├── app/                 # Pages and API routes
+├── app/           # Pages and API routes
 ├── components/
-│   ├── ui/              # shadcn/ui primitives
-│   ├── blocks/          # Page sections (hero, projects)
-│   └── icons/           # SVG icon components
-├── data/                # Static data (projects, experience)
-└── lib/
-    ├── ai/              # AI providers and prompts
-    │   ├── providers/   # Ollama, Gemini
-    │   └── prompts/     # Commit message templates
-    └── utils.ts         # Shared utilities
+│   ├── ui/        # shadcn/ui primitives
+│   ├── blocks/    # Page sections
+│   └── icons/     # SVG icons
+├── data/          # Static data
+└── lib/           # Utilities
 ```
+
+## Workflow
+
+**Local:** Pre-commit hooks run lint + typecheck via Lefthook.
+
+**CI:** GitHub Actions runs lint, typecheck, build on push/PR to main.
+
+**Deploy:** Vercel auto-deploys on push to main.
 
 ## License
 

@@ -6,13 +6,3 @@ pre-commit:
 
     - name: typecheck
       run: pnpm tsc --noEmit
-
-prepare-commit-msg:
-  jobs:
-    - name: devmoji
-      run: pnpm devmoji -e --lint
-
-commit-msg:
-  jobs:
-    - name: commitlint
-      run: pnpm commitlint --edit {1}
