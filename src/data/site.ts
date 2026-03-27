@@ -43,9 +43,21 @@ export const navItems: NavItem[] = [
     keywords: ["work", "portfolio", "code"],
   },
   {
+    label: "Blog",
+    href: "/#blog",
+    icon: "file",
+    keywords: ["posts", "articles", "writing", "thoughts"],
+  },
+  {
     label: "Now",
     href: "/now",
     icon: "user",
     keywords: ["current", "doing", "today", "status"],
+  },
+  {
+    label: "Uses",
+    href: "/uses",
+    icon: "file",
+    keywords: ["setup", "tools", "gear", "hardware", "software", "stack"],
   },
 ];
