@@ -48,7 +48,7 @@ export function Hero() {
           </AnimatedBorderButton>
 
           {/* Divider */}
-          <div className="h-6 w-px bg-border" />
+          <div className="h-6 w-px bg-foreground/20" />
 
           {/* Social links */}
           <div className="flex items-center gap-1">

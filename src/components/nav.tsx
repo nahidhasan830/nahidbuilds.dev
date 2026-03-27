@@ -117,14 +117,25 @@ export function Nav() {
         </div>
       </nav>
 
+      {/* Mobile menu backdrop */}
       <div
         className={cn(
-          "fixed inset-0 top-16 z-40 bg-background/95 backdrop-blur-sm transition-opacity duration-150 md:hidden",
+          "fixed inset-0 top-16 z-40 bg-black/60 backdrop-blur-sm transition-opacity duration-150 md:hidden",
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none",
         )}
         aria-hidden={!isOpen}
+        onClick={() => setIsOpen(false)}
+      />
+
+      {/* Mobile menu panel */}
+      <div
+        className={cn(
+          "fixed top-16 right-0 z-50 h-auto w-64 border-l border-border/50 bg-background transition-transform duration-150 md:hidden",
+          isOpen ? "translate-x-0" : "translate-x-full",
+        )}
+        aria-hidden={!isOpen}
       >
-        <ul className="container flex flex-col gap-2 px-6 py-6">
+        <ul className="flex flex-col gap-2 px-6 py-6">
           {visibleNavItems.map((item) => (
             <li key={item.href}>
               <Link
