@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Toaster } from "sonner";
+import { ActiveSectionProvider } from "@/components/active-section-context";
 import { CommandPalette } from "@/components/command-palette";
 import { ConsoleMessage } from "@/components/console-message";
+import { ContactDialogProvider } from "@/components/contact-dialog-context";
 import { Footer } from "@/components/footer";
 import { Nav } from "@/components/nav";
 import { ThemeProvider } from "@/components/theme-provider";
@@ -50,11 +53,16 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <ConsoleMessage />
-          <CommandPalette />
-          <Nav />
-          <div className="flex-1">{children}</div>
-          <Footer />
+          <ActiveSectionProvider>
+            <ContactDialogProvider>
+              <ConsoleMessage />
+              <CommandPalette />
+              <Toaster position="bottom-right" richColors />
+              <Nav />
+              <div className="flex-1">{children}</div>
+              <Footer />
+            </ContactDialogProvider>
+          </ActiveSectionProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -153,7 +153,7 @@ export function Projects() {
 
   return (
     <Section id="projects">
-      <div className="mb-12">
+      <div className="mb-8">
         <h2 className="mb-3 text-3xl font-bold tracking-tight md:text-4xl">
           Projects
         </h2>

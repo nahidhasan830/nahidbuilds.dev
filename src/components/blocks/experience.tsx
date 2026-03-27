@@ -147,7 +147,7 @@ function TimelineItem({
 export function Experience() {
   return (
     <Section id="experience">
-      <div className="mb-8 sm:mb-10 md:mb-12">
+      <div className="mb-6 sm:mb-8">
         <h2 className="mb-2 text-2xl font-bold tracking-tight sm:mb-3 sm:text-3xl md:text-4xl">
           Experience
         </h2>

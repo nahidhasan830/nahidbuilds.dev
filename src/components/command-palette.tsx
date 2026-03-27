@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { useContactDialog } from "@/components/contact-dialog-context";
 import { GithubIcon } from "@/components/icons/github";
 import { LinkedinIcon } from "@/components/icons/linkedin";
 import { useTheme } from "@/components/theme-provider";
@@ -47,6 +48,7 @@ export function CommandPalette() {
   const [isMac, setIsMac] = useState(true);
   const router = useRouter();
   const { resolvedTheme, toggleTheme } = useTheme();
+  const { openContactDialog } = useContactDialog();
 
   const isDark = resolvedTheme === "dark";
 
@@ -105,7 +107,7 @@ export function CommandPalette() {
       id: "email",
       label: "Send Email",
       icon: <Mail className="size-4" />,
-      action: () => window.open(`mailto:${siteConfig.socials.email}`, "_blank"),
+      action: openContactDialog,
       keywords: ["contact", "message", "reach"],
     },
   ];

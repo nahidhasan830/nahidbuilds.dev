@@ -1,6 +1,9 @@
+"use client";
+
 import { Mail } from "lucide-react";
 import Link from "next/link";
 import { ContactButton } from "@/components/contact-button";
+import { useContactDialog } from "@/components/contact-dialog-context";
 import { GithubIcon } from "@/components/icons/github";
 import { LinkedinIcon } from "@/components/icons/linkedin";
 import { Button } from "@/components/ui/button";
@@ -9,6 +12,8 @@ import { navItems, siteConfig } from "@/data/site";
 const visibleNavItems = navItems.filter((item) => item.showInNav !== false);
 
 export function Footer() {
+  const { openContactDialog } = useContactDialog();
+
   return (
     <footer>
       <div className="bg-muted/40 py-16">
@@ -67,13 +72,14 @@ export function Footer() {
                   <LinkedinIcon className="size-4" />
                 </a>
               </Button>
-              <Button variant="ghost" size="icon" className="size-8" asChild>
-                <a
-                  href={`mailto:${siteConfig.socials.email}`}
-                  aria-label="Email"
-                >
-                  <Mail className="size-4" />
-                </a>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="size-8"
+                onClick={openContactDialog}
+                aria-label="Email"
+              >
+                <Mail className="size-4" />
               </Button>
             </div>
           </div>

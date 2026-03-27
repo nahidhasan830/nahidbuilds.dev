@@ -48,7 +48,7 @@ export const gemini: AIProvider = {
         ],
         generationConfig: {
           temperature: options?.temperature ?? 0.7,
-          maxOutputTokens: options?.maxTokens ?? 200,
+          maxOutputTokens: options?.maxTokens ?? 500,
         },
       }),
     });

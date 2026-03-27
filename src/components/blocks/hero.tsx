@@ -1,4 +1,7 @@
+"use client";
+
 import { FileDown, Mail } from "lucide-react";
+import { useContactDialog } from "@/components/contact-dialog-context";
 import { GithubIcon } from "@/components/icons/github";
 import { LinkedinIcon } from "@/components/icons/linkedin";
 import { AnimatedBorderButton } from "@/components/ui/animated-border-button";
@@ -16,6 +19,8 @@ function PingDot() {
 }
 
 export function Hero() {
+  const { openContactDialog } = useContactDialog();
+
   return (
     <section className="hero-glow min-h-screen pt-16 flex items-center">
       <div className="container px-6 md:px-12 lg:px-24 flex flex-col items-center text-center">
@@ -74,10 +79,13 @@ export function Hero() {
               </a>
             </Button>
 
-            <Button variant="ghost" size="icon" asChild>
-              <a href={`mailto:${siteConfig.socials.email}`} aria-label="Email">
-                <Mail />
-              </a>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={openContactDialog}
+              aria-label="Email"
+            >
+              <Mail />
             </Button>
           </div>
         </div>

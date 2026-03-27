@@ -2,67 +2,67 @@
 
 Personal portfolio website for Nahid Hasan, Software Engineer.
 
-## Tech Stack
-
-- **Framework**: Next.js 16 (App Router, Turbopack)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS v4
-- **Components**: shadcn/ui
-- **Linting**: Biome
-- **Package Manager**: pnpm
-
-## Getting Started
+## Quick Start
 
 ```bash
-# Install dependencies
 pnpm install
-
-# Start dev server
 pnpm dev
-
-# Build for production
-pnpm build
 ```
+
+## Tech Stack
+
+| Category | Choice |
+|----------|--------|
+| Framework | Next.js 16 (App Router, Turbopack) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 |
+| Components | shadcn/ui |
+| Linting | Biome |
 
 ## Scripts
 
 | Command | Description |
 |---------|-------------|
-| `pnpm dev` | Start development server |
+| `pnpm dev` | Development server |
 | `pnpm build` | Production build |
 | `pnpm lint` | Run Biome linter |
-| `pnpm format` | Format code with Biome |
-| `pnpm commit` | Interactive conventional commit (czg) |
-| `pnpm commit:ai` | AI-assisted commit message |
+| `pnpm format` | Format with Biome |
+| `pnpm commit` | Interactive commit (czg) |
+| `pnpm commit:ai` | AI-assisted commit |
 
 ## AI Commit
 
-Generate commit messages with AI assistance:
-
 ```bash
-# Auto-generate from diff
-pnpm commit:ai
-
-# Polish your rough message
-pnpm commit:ai "fixed the nav bug"
-
-# Skip lint checks
-pnpm commit:ai --force
-
-# Use manual czg instead
-pnpm commit:ai --manual
+pnpm commit:ai                      # Generate from diff
+pnpm commit:ai "fixed nav bug"      # Polish rough message
+pnpm commit:ai --force              # Skip lint
 ```
+
+Interactive options:
+- `Enter` - Commit with current message
+- `e` - Edit message
+- `w` - Write message manually
+- `r` - Retry AI generation
+- `p` - Switch provider (Ollama/Gemini)
+- `d` - View diff
+- `s` - Show staged files
+- `q` - Quit
 
 ## Project Structure
 
 ```
 src/
-├── app/           # Next.js app router pages
+├── app/                 # Pages and API routes
 ├── components/
-│   ├── ui/        # shadcn/ui primitives
-│   └── blocks/    # Page sections (hero, projects, etc.)
-├── data/          # Static data (projects, experience)
-└── lib/           # Utilities and AI helpers
+│   ├── ui/              # shadcn/ui primitives
+│   ├── blocks/          # Page sections (hero, projects)
+│   └── icons/           # SVG icon components
+├── data/                # Static data (projects, experience)
+└── lib/
+    ├── ai/              # AI providers and prompts
+    │   ├── providers/   # Ollama, Gemini
+    │   └── prompts/     # Commit message templates
+    └── utils.ts         # Shared utilities
 ```
 
 ## License

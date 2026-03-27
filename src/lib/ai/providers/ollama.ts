@@ -45,7 +45,7 @@ export const ollama: AIProvider = {
         stream: false,
         options: {
           temperature: options?.temperature ?? 0.7,
-          num_predict: options?.maxTokens ?? 200,
+          num_predict: options?.maxTokens ?? 500,
         },
       }),
     });
