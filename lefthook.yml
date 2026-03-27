@@ -1,0 +1,18 @@
+pre-commit:
+  parallel: true
+  jobs:
+    - name: lint
+      run: pnpm biome check --staged --no-errors-on-unmatched
+
+    - name: typecheck
+      run: pnpm tsc --noEmit
+
+prepare-commit-msg:
+  jobs:
+    - name: devmoji
+      run: pnpm devmoji -e --lint
+
+commit-msg:
+  jobs:
+    - name: commitlint
+      run: pnpm commitlint --edit {1}
