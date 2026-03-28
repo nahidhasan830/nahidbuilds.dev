@@ -1,0 +1,130 @@
+---
+title: "React Compiler: The End of Manual Memoization"
+description: "The React Compiler automatically optimizes your components at build time. Here's how it works, what it replaces, and what can still break it."
+date: 2026-03-15
+published: true
+cover: /blog/react-compiler.jpg
+tags:
+  - React
+  - Performance
+  - JavaScript
+---
+
+If you've been writing React for any amount of time, you've probably had the `useMemo` vs `useCallback` debate. Wrap everything? Only wrap expensive computations? What counts as expensive?
+
+The React Compiler makes most of that irrelevant.
+
+## What the Compiler Actually Does
+
+The React Compiler is a build-time tool (a Babel/SWC plugin) that analyzes your components and automatically inserts memoization where it matters. Instead of you guessing which values to memoize, the compiler performs static analysis and injects cache boundaries per reactive scope.
+
+Here's what that looks like in practice. You write this:
+
+```tsx
+function ProductCard({ product, onAdd }) {
+  const price = formatCurrency(product.price);
+  const discount = calculateDiscount(product.price, product.sale);
+
+  return (
+    <div>
+      <h3>{product.name}</h3>
+      <p>{price}</p>
+      {discount > 0 && <Badge>{discount}% off</Badge>}
+      <button onClick={() => onAdd(product.id)}>Add to cart</button>
+    </div>
+  );
+}
+```
+
+The compiler outputs something conceptually like this — it inserts equality checks around individual expressions and skips recalculation when inputs haven't changed. You never see this output, but it's what runs in the browser.
+
+No `useMemo`. No `useCallback`. No `React.memo` wrapper. The compiler handles it.
+
+## The Numbers
+
+Meta's internal rollout showed real results: out of 1,411 components compiled, the compiler achieved a **20-30% reduction in render time and latency**. That's not a micro-benchmark — that's production Facebook and Instagram.
+
+For most apps, the compiler eliminates about 90% of manual performance optimization work.
+
+## What Still Breaks It
+
+The compiler assumes your code follows the Rules of React. When it can't prove that a piece of code is safe to memoize, it bails out silently. Here's what trips it up:
+
+### Mutating props or state directly
+
+```tsx
+// The compiler will skip this component
+function BadComponent({ items }) {
+  items.sort((a, b) => a.name.localeCompare(b.name)); // mutating props!
+  return <List data={items} />;
+}
+
+// Fix: create a new array
+function GoodComponent({ items }) {
+  const sorted = [...items].sort((a, b) => a.name.localeCompare(b.name));
+  return <List data={sorted} />;
+}
+```
+
+### Side effects during render
+
+```tsx
+// console.log in render causes the compiler to bail
+function DebugComponent({ value }) {
+  console.log("rendered with", value); // side effect in render
+  return <span>{value}</span>;
+}
+```
+
+### Reading refs during render
+
+```tsx
+// Refs are mutable — the compiler can't track them
+function Broken({ ref }) {
+  const value = ref.current; // unsafe during render
+  return <span>{value}</span>;
+}
+```
+
+### Class instances with methods
+
+Class-heavy object models where methods compute derived values confuse the compiler's static analysis. It can't easily determine if a method call is pure.
+
+## The useEffect Gotcha
+
+This is the subtle one. The compiler changes *when* values get a new reference. If you had:
+
+```tsx
+const config = { theme: "dark", lang: "en" };
+
+useEffect(() => {
+  applyConfig(config);
+}, [config]);
+```
+
+Before the compiler, `config` got a new reference every render, so the effect ran every time. After the compiler, `config` might be memoized, so the effect only runs when the values actually change. That's usually what you want — but if your code accidentally depended on the effect firing every render, it'll break.
+
+## Should You Remove Existing useMemo/useCallback?
+
+Not yet. The compiler is smart enough to work alongside existing manual memoization. It won't double-memoize. But you can stop adding new ones in most cases.
+
+The practical approach:
+
+1. **New code**: Don't add `useMemo`/`useCallback` unless you've profiled and confirmed a real problem
+2. **Existing code**: Leave it. Remove during regular refactoring, not as a dedicated cleanup
+3. **Focus on purity**: The real investment is making sure your render functions are pure — that's what lets the compiler do its job
+
+## Enabling It
+
+In Next.js 16, the React Compiler is available as a stable feature:
+
+```ts
+// next.config.ts
+const nextConfig = {
+  reactCompiler: true,
+};
+```
+
+That's it. One line. Your entire app gets automatic memoization at build time.
+
+The era of manually optimizing React re-renders is effectively over. Write clean, pure components, and let the compiler handle the rest.

@@ -1,0 +1,145 @@
+---
+title: "Why I Replaced ESLint and Prettier with Biome"
+description: "One tool instead of two. One config file instead of four. 25x faster linting. Here's why Biome won and what you lose by switching."
+date: 2026-02-05
+published: true
+cover: /blog/biome-eslint.jpg
+tags:
+  - Tooling
+  - DX
+  - JavaScript
+---
+
+I spent an embarrassing amount of time configuring ESLint and Prettier on my last project. Shared configs conflicting with framework plugins. Prettier reformatting code that ESLint just fixed. The `.eslintrc`, `.prettierrc`, `.eslintignore`, `.prettierignore` dance.
+
+Then I tried Biome. One install, one config, done.
+
+## The Speed Difference
+
+Let's start with what convinced me. I benchmarked both on a moderately sized Next.js project (~800 files):
+
+| Operation | ESLint + Prettier | Biome |
+|-----------|------------------|-------|
+| Full lint | 12.3s | 0.5s |
+| Full format | 4.1s | 0.2s |
+| Pre-commit hook | 8.2s | 0.3s |
+
+Biome is written in Rust. It doesn't spawn Node.js, doesn't load a plugin graph, doesn't resolve config chains. It reads your files and processes them.
+
+The pre-commit hook difference is what sold me. Going from 8 seconds to 300 milliseconds means I actually commit more often because there's no friction.
+
+## One Config File
+
+My entire Biome configuration:
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/2.0.0/schema.json",
+  "linter": {
+    "rules": {
+      "recommended": true
+    }
+  },
+  "formatter": {
+    "indentStyle": "tab",
+    "lineWidth": 80
+  }
+}
+```
+
+Compare that to a typical ESLint + Prettier setup:
+
+- `.eslintrc.json` with `extends`, `plugins`, `rules`, `overrides`
+- `eslint.config.mjs` (if you've migrated to flat config)
+- `.prettierrc` with formatting preferences
+- Peer dependencies: `eslint`, `@eslint/js`, `typescript-eslint`, `eslint-config-prettier`, `eslint-plugin-react`, `eslint-plugin-react-hooks`, `eslint-plugin-next`, `prettier`
+
+That's 8+ packages and at least 2 config files to do what Biome does with one binary and one JSON file.
+
+## What You Actually Lose
+
+I'd be dishonest if I didn't cover the gaps:
+
+### No framework-specific rules
+
+ESLint has `eslint-plugin-react-hooks` that catches Rules of Hooks violations and `eslint-plugin-next` that catches Next.js-specific issues. Biome doesn't have equivalents for these. In practice, the React Compiler now catches hooks violations at build time, and Next.js shows its own warnings in the terminal.
+
+### Fewer rules overall
+
+Biome ships 423+ lint rules as of v2. ESLint's ecosystem has thousands across hundreds of plugins. If you rely on niche rules (like `eslint-plugin-testing-library` or `eslint-plugin-storybook`), Biome won't cover them.
+
+### No custom rule authoring
+
+If your team writes custom ESLint rules, you can't do that with Biome yet. This matters for large organizations with internal coding standards.
+
+## What You Gain
+
+### Actually consistent formatting
+
+ESLint and Prettier can fight each other. An ESLint autofix changes something, then Prettier reformats it differently, then ESLint flags the Prettier output. The `eslint-config-prettier` package exists solely to disable ESLint rules that conflict with Prettier. That's a workaround for a problem that shouldn't exist.
+
+Biome is one tool. Linting and formatting are coordinated. No conflicts possible.
+
+### Better error messages
+
+Biome's diagnostics are genuinely good:
+
+```
+src/app/page.tsx:14:7
+  × Don't use Array.forEach. Use a for loop instead.
+  ℹ Safe fix available: Use a for...of loop.
+```
+
+It shows the file, line, column, the issue, and an actionable fix. ESLint's output requires more cognitive overhead to parse.
+
+### Import sorting included
+
+Biome sorts imports out of the box. No `eslint-plugin-import` or `@trivago/prettier-plugin-sort-imports`. It just works:
+
+```tsx
+// Before
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+import type { Metadata } from "next";
+import Link from "next/link";
+
+// After (Biome auto-sorted)
+import type { Metadata } from "next";
+import Link from "next/link";
+import { useState } from "react";
+import { cn } from "@/lib/utils";
+```
+
+Type imports first, external packages grouped, internal imports last.
+
+## My Setup
+
+Two scripts in `package.json`:
+
+```json
+{
+  "scripts": {
+    "lint": "biome check",
+    "format": "biome format --write"
+  }
+}
+```
+
+Pre-commit hook via Lefthook:
+
+```yaml
+pre-commit:
+  commands:
+    biome:
+      run: biome check --staged
+```
+
+That's the entire setup. No lint-staged, no husky, no five-step pipeline.
+
+## When to Stick with ESLint
+
+- You need type-aware lint rules (Biome is adding these, but ESLint's `typescript-eslint` is more mature)
+- You depend on specific ESLint plugins with no Biome equivalent
+- You're in a large monorepo with years of ESLint configuration you can't justify rewriting
+
+For everyone else — especially new projects — Biome is the better choice in 2026.

@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -288,4 +289,59 @@
   html {
     scroll-behavior: auto;
   }
+}
+
+/* rehype-pretty-code styles */
+[data-rehype-pretty-code-figure] pre {
+  @apply overflow-x-auto py-4;
+}
+
+[data-rehype-pretty-code-figure] code {
+  @apply grid min-w-full break-words rounded-none border-0 bg-transparent p-0 text-sm;
+  counter-reset: line;
+  box-decoration-break: clone;
+}
+
+[data-rehype-pretty-code-figure] .line {
+  @apply px-4 py-0.5;
+}
+
+[data-rehype-pretty-code-figure] [data-line-numbers] .line {
+  @apply pl-2;
+}
+
+[data-rehype-pretty-code-figure] [data-line-numbers] .line::before {
+  @apply mr-4 inline-block w-4 text-right text-muted-foreground;
+  counter-increment: line;
+  content: counter(line);
+}
+
+[data-rehype-pretty-code-figure] .line--highlighted {
+  @apply bg-primary/10;
+}
+
+[data-rehype-pretty-code-figure] .word--highlighted {
+  @apply rounded bg-primary/20 px-1 py-0.5;
+}
+
+[data-rehype-pretty-code-title] {
+  @apply rounded-t-lg border border-b-0 bg-muted px-4 py-2 text-sm font-medium;
+}
+
+[data-rehype-pretty-code-title] + pre {
+  @apply mt-0 rounded-t-none;
+}
+
+/* Light/dark code theme switching */
+[data-theme="light"] {
+  display: block;
+}
+[data-theme="dark"] {
+  display: none;
+}
+.dark [data-theme="light"] {
+  display: none;
+}
+.dark [data-theme="dark"] {
+  display: block;
 }

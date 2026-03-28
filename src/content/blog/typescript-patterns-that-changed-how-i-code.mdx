@@ -1,0 +1,166 @@
+---
+title: "TypeScript Patterns That Changed How I Write Code"
+description: "Five TypeScript patterns I use daily — from satisfies to discriminated unions — and why they make code safer without adding complexity."
+date: 2026-01-18
+published: true
+cover: /blog/typescript-patterns.jpg
+tags:
+  - TypeScript
+  - Patterns
+  - JavaScript
+---
+
+I've been writing TypeScript for years, but a few patterns fundamentally changed how I think about types. Not the advanced generic gymnastics you see on Twitter — practical patterns that catch real bugs.
+
+## 1. satisfies: Validate Without Widening
+
+The `satisfies` operator checks that an expression conforms to a type without changing its inferred type. That sounds abstract, so here's why it matters:
+
+```tsx
+// With type annotation — loses literal types
+const routes: Record<string, string> = {
+  home: "/",
+  blog: "/blog",
+  about: "/about",
+};
+
+routes.hoem; // No error! TypeScript only knows values are `string`
+```
+
+```tsx
+// With satisfies — keeps literal types
+const routes = {
+  home: "/",
+  blog: "/blog",
+  about: "/about",
+} satisfies Record<string, string>;
+
+routes.hoem; // Error: Property 'hoem' does not exist
+routes.home; // Type is "/" (literal), not string
+```
+
+The `satisfies` version gives you two things: compile-time validation that every value is a string, AND autocomplete on the keys. The type annotation version only gives you the first.
+
+I use this everywhere for configuration objects, route maps, and theme tokens.
+
+## 2. Discriminated Unions for State Machines
+
+Instead of modeling state as a bag of optional properties:
+
+```tsx
+// Fragile — nothing prevents impossible states
+type Request = {
+  status: "idle" | "loading" | "success" | "error";
+  data?: User[];
+  error?: string;
+};
+
+// Can you have data AND error? Is data undefined when status is "success"?
+```
+
+Use discriminated unions:
+
+```tsx
+type Request =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; data: User[] }
+  | { status: "error"; error: string };
+
+function handleRequest(req: Request) {
+  switch (req.status) {
+    case "idle":
+      return <EmptyState />;
+    case "loading":
+      return <Spinner />;
+    case "success":
+      return <UserList users={req.data} />; // data is guaranteed
+    case "error":
+      return <ErrorMessage message={req.error} />; // error is guaranteed
+  }
+}
+```
+
+TypeScript narrows the type in each branch. When `status` is `"success"`, `data` exists and is `User[]` — no optional chaining, no null checks, no runtime assertions.
+
+If you add a new status variant and forget to handle it, TypeScript tells you immediately.
+
+## 3. Template Literal Types for String Validation
+
+Move string validation from runtime to compile time:
+
+```tsx
+type HexColor = `#${string}`;
+type EventName = `on${Capitalize<string>}`;
+type CSSUnit = `${number}${"px" | "rem" | "em" | "%"}`;
+
+function setColor(color: HexColor) { /* ... */ }
+
+setColor("#ff5500"); // OK
+setColor("red");     // Error: not assignable to `#${string}`
+
+function setWidth(width: CSSUnit) { /* ... */ }
+
+setWidth("16px");   // OK
+setWidth("1.5rem"); // OK
+setWidth("16");     // Error: not assignable to CSSUnit
+```
+
+This is zero runtime overhead — the validation happens entirely at compile time. I find it particularly useful for API route paths, CSS values, and environment variable names.
+
+## 4. const Assertions for Immutable Data
+
+When you define an array or object, TypeScript widens the types by default:
+
+```tsx
+const sizes = ["sm", "md", "lg"]; // type: string[]
+const config = { theme: "dark", lang: "en" }; // type: { theme: string, lang: string }
+```
+
+Adding `as const` preserves the literal types and makes everything readonly:
+
+```tsx
+const sizes = ["sm", "md", "lg"] as const;
+// type: readonly ["sm", "md", "lg"]
+
+type Size = (typeof sizes)[number]; // "sm" | "md" | "lg"
+
+const config = { theme: "dark", lang: "en" } as const;
+// type: { readonly theme: "dark", readonly lang: "en" }
+```
+
+The `typeof sizes[number]` pattern is my favorite — it derives a union type directly from an array value. Define your data once, get the type for free. No manual sync between a `const` array and a `type` union.
+
+## 5. Exhaustive Checks with never
+
+The `never` type ensures you've handled every case in a union:
+
+```tsx
+type Shape =
+  | { kind: "circle"; radius: number }
+  | { kind: "rectangle"; width: number; height: number }
+  | { kind: "triangle"; base: number; height: number };
+
+function area(shape: Shape): number {
+  switch (shape.kind) {
+    case "circle":
+      return Math.PI * shape.radius ** 2;
+    case "rectangle":
+      return shape.width * shape.height;
+    case "triangle":
+      return 0.5 * shape.base * shape.height;
+    default: {
+      const _exhaustive: never = shape;
+      return _exhaustive;
+    }
+  }
+}
+```
+
+If someone adds `{ kind: "polygon"; sides: number[] }` to the `Shape` union and forgets to add a case, the `never` assignment fails at compile time. This is a simple pattern but it's caught real bugs for me in production codebases — especially when union types are defined in shared packages and consumed across multiple services.
+
+## The Common Thread
+
+None of these patterns add runtime complexity. No extra functions, no wrapper classes, no library imports. They're all compile-time constraints that disappear in the JavaScript output.
+
+That's the best kind of TypeScript — types that make impossible states unrepresentable, catch bugs before they happen, and cost nothing at runtime.

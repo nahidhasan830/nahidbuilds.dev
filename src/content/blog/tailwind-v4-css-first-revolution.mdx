@@ -1,0 +1,127 @@
+---
+title: "Tailwind CSS v4: A CSS-First Revolution"
+description: "Tailwind v4 replaces JavaScript config with native CSS, ships a Rust-based compiler that's 100x faster on incremental builds, and introduces modern CSS features. Here's what changed."
+date: 2026-03-08
+published: true
+cover: /blog/tailwind-css.jpg
+tags:
+  - CSS
+  - Tailwind
+  - Frontend
+---
+
+Tailwind CSS v4 is not an incremental update. It's an architectural rethink — the config model, plugin API, build pipeline, and dozens of utility class names all changed. After migrating this site to v4, here's what I think matters.
+
+## The Big Shift: CSS-First Configuration
+
+The `tailwind.config.js` file is gone. Your design system now lives in CSS:
+
+```css
+@import "tailwindcss";
+
+@theme {
+  --color-primary: oklch(0.65 0.17 55);
+  --color-background: oklch(0.98 0.005 85);
+  --font-sans: "Geist Sans", system-ui, sans-serif;
+  --radius-lg: 1rem;
+}
+```
+
+Every token you define in `@theme` does two things automatically:
+
+1. Generates a CSS custom property (e.g., `var(--color-primary)`)
+2. Creates corresponding utility classes (e.g., `bg-primary`, `text-primary`)
+
+This eliminates the disconnect between Tailwind utilities and raw CSS. You can use `var(--color-primary)` in a custom animation keyframe and `bg-primary` in your JSX, and they're guaranteed to be the same value.
+
+## Performance: Not Even Close
+
+Tailwind v4 uses a new Rust-based engine (Lightning CSS). The numbers:
+
+| Metric | v3 | v4 |
+|--------|----|----|
+| Full build (10k files) | ~45s | ~9s |
+| Incremental build | ~200ms | **microseconds** |
+
+That's not a typo. Incremental builds — what happens when you save a file during development — are measured in *microseconds*. The HMR feedback loop is essentially instant.
+
+## Class Renames You'll Hit
+
+If you're migrating, these are the ones that'll break your muscle memory:
+
+```
+bg-gradient-to-r  →  bg-linear-to-r
+flex-shrink-0     →  shrink-0
+flex-grow          →  grow
+overflow-ellipsis  →  text-ellipsis
+decoration-clone   →  box-decoration-clone
+```
+
+The official upgrade tool handles most of these automatically:
+
+```bash
+npx @tailwindcss/upgrade
+```
+
+It's not perfect — I had to manually fix about 10% of cases — but it saves hours compared to doing it by hand.
+
+## Modern CSS Features, Built In
+
+### Container Queries
+
+No plugin needed. Just use `@container`:
+
+```html
+<div className="@container">
+  <div className="@sm:flex @lg:grid @lg:grid-cols-2">
+    {/* Layout adapts to container width, not viewport */}
+  </div>
+</div>
+```
+
+This is huge for component libraries where you don't control the viewport but need responsive behavior relative to the parent.
+
+### 3D Transforms
+
+```html
+<div className="rotate-x-12 rotate-y-6 perspective-800">
+  {/* Native 3D transform utilities */}
+</div>
+```
+
+### Starting Style Variant
+
+Entrance animations without JavaScript:
+
+```html
+<div className="starting:opacity-0 starting:scale-95 transition-all duration-300">
+  {/* Animates in when mounted */}
+</div>
+```
+
+This uses the CSS `@starting-style` rule, which defines the initial state for transition animations. The browser animates from the starting style to the element's normal style on first paint.
+
+## The Plugin API Changed
+
+If you used custom plugins in v3, they need rewriting. The old `addUtilities()` and `addComponents()` API is replaced with a CSS-native approach using `@plugin`:
+
+```css
+@plugin "./my-plugin.js";
+```
+
+Plugins now export a function that receives a CSS API instead of the old JavaScript builder pattern. The migration isn't trivial for complex plugins, but the result is more composable.
+
+## My Honest Take
+
+**What's better:**
+- Zero-config start (just `@import "tailwindcss"`)
+- Design tokens are real CSS variables you can use anywhere
+- Container queries should have been in CSS years ago
+- The speed is genuinely transformative for large projects
+
+**What's worse:**
+- The migration from v3 is not painless, especially with custom plugins
+- Some class renames feel arbitrary (`bg-gradient-to-r` was fine)
+- IDE autocomplete needed updates that took a few weeks to stabilize
+
+**Verdict:** If you're starting a new project, v4 is a no-brainer. If you're maintaining a large v3 codebase, plan a proper migration sprint — don't try to squeeze it between feature work.

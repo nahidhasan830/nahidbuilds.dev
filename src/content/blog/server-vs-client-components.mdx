@@ -1,0 +1,168 @@
+---
+title: "Server vs Client Components: A Practical Decision Framework"
+description: "The 'use client' directive isn't a switch you flip when things break. Here's a systematic way to decide where your component boundaries should be."
+date: 2026-02-20
+published: true
+cover: /blog/server-client.jpg
+tags:
+  - Next.js
+  - React
+  - Architecture
+---
+
+Every Next.js developer hits this moment: something doesn't work in a Server Component, so you slap `"use client"` at the top and move on. It works. But over time, your client boundary creeps higher and higher up the tree, and suddenly half your app is hydrating on the client for no good reason.
+
+Here's the framework I use to decide.
+
+## The Default: Everything is a Server Component
+
+In the App Router, components are Server Components by default. They run on the server, send HTML to the browser, and ship **zero JavaScript** to the client. This is the right default for most of your app.
+
+A Server Component can:
+
+- Fetch data directly (no API route needed)
+- Access databases, file systems, environment variables
+- Use `async/await` at the component level
+- Import and render Client Components
+
+```tsx
+async function RecentPosts() {
+  const posts = await db.post.findMany({ take: 5 });
+
+  return (
+    <ul>
+      {posts.map((post) => (
+        <li key={post.id}>{post.title}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+No loading state, no `useEffect`, no state management. Just data and markup.
+
+## When You Actually Need "use client"
+
+You need a Client Component when the component requires **browser APIs or user interaction**:
+
+| Need | Example | Why it's client-only |
+|------|---------|---------------------|
+| Event handlers | `onClick`, `onChange`, `onSubmit` | Events only exist in the browser |
+| State | `useState`, `useReducer` | State is a client concept |
+| Effects | `useEffect`, `useLayoutEffect` | Side effects after mount |
+| Browser APIs | `localStorage`, `window`, `IntersectionObserver` | Don't exist on the server |
+| Third-party hooks | Most UI libraries | They use state/effects internally |
+
+## The Mistake: Boundary Too High
+
+This is the most common anti-pattern I see:
+
+```tsx
+"use client"; // <- this forces EVERYTHING below to hydrate
+
+export default function BlogPage() {
+  const [search, setSearch] = useState("");
+  const posts = useFilteredPosts(search); // client-side filtering
+
+  return (
+    <main>
+      <Header /> {/* Static - didn't need to be client */}
+      <Sidebar /> {/* Static - didn't need to be client */}
+      <SearchInput value={search} onChange={setSearch} />
+      <PostList posts={posts} />
+      <Footer /> {/* Static - didn't need to be client */}
+    </main>
+  );
+}
+```
+
+The search input needs to be a Client Component, but by putting `"use client"` on the page, you've forced Header, Sidebar, and Footer to hydrate too. That's unnecessary JavaScript.
+
+## The Fix: Push the Boundary Down
+
+Extract only the interactive part:
+
+```tsx
+// search-input.tsx
+"use client";
+export function SearchInput() {
+  const [search, setSearch] = useState("");
+  // ... handles its own state
+}
+
+// page.tsx (Server Component)
+export default async function BlogPage() {
+  const posts = await getPosts();
+
+  return (
+    <main>
+      <Header />
+      <Sidebar />
+      <SearchInput />
+      <PostList posts={posts} />
+      <Footer />
+    </main>
+  );
+}
+```
+
+Now only `SearchInput` ships JavaScript. Everything else is static HTML.
+
+## The Decision Flowchart
+
+For each component, ask these questions in order:
+
+1. **Does it handle user interaction?** (clicks, inputs, hover states) → Client Component
+2. **Does it use React state or effects?** → Client Component
+3. **Does it need browser APIs?** → Client Component
+4. **Everything else** → Server Component
+
+If only a *part* of a component needs interactivity, extract that part into its own Client Component and keep the parent as a Server Component.
+
+## Composition Pattern: Server Data → Client Interactivity
+
+The most powerful pattern is passing server-fetched data to client components as props:
+
+```tsx
+// page.tsx (Server Component)
+export default async function Dashboard() {
+  const data = await getAnalytics(); // runs on server
+
+  return (
+    <div>
+      <h1>Dashboard</h1>
+      <InteractiveChart data={data} /> {/* client handles interaction */}
+    </div>
+  );
+}
+```
+
+```tsx
+// interactive-chart.tsx
+"use client";
+export function InteractiveChart({ data }) {
+  const [timeRange, setTimeRange] = useState("7d");
+  const filtered = filterByRange(data, timeRange);
+
+  return (
+    <div>
+      <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
+      <Chart data={filtered} />
+    </div>
+  );
+}
+```
+
+The data fetching happens on the server (fast, secure, no API route). The interactivity happens on the client. Best of both worlds.
+
+## The Audit
+
+Before shipping, grep your codebase for `"use client"`:
+
+```bash
+grep -r "use client" src/ --include="*.tsx" -l | wc -l
+```
+
+For every file in that list, ask: *does this component actually use state, effects, or event handlers?* If the answer is no, it shouldn't be a Client Component.
+
+On this portfolio site, only 5 out of 30+ components are Client Components: the command palette, theme provider, contact form, contact dialog context, and active section observer. Everything else is server-rendered.
