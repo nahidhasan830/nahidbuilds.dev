@@ -12,7 +12,6 @@ const blog = defineCollection({
       description: s.string().max(300),
       date: s.isodate(),
       published: s.boolean().default(true),
-      cover: s.string().optional(),
       tags: s.array(s.string()).default([]),
       series: s.string().optional(),
       seriesOrder: s.number().optional(),

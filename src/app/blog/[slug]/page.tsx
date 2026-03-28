@@ -1,6 +1,5 @@
 import { ArrowLeft, Calendar, Clock } from "lucide-react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { blog } from "#site/content";
@@ -70,19 +69,6 @@ export default async function PostPage({ params }: PostPageProps) {
 
       <div className="xl:grid xl:grid-cols-[1fr_12rem] xl:gap-10">
         <div>
-          {/* Cover Image */}
-          {post.cover && (
-            <div className="relative aspect-[2/1] overflow-hidden rounded-xl mb-8">
-              <Image
-                src={post.cover}
-                alt={post.title}
-                fill
-                className="object-cover"
-                priority
-              />
-            </div>
-          )}
-
           {/* Post Header */}
           <header className="mb-10 pb-8 border-b border-border">
             {post.tags.length > 0 && (

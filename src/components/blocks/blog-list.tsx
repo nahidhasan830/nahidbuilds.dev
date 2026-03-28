@@ -50,8 +50,8 @@ export function BlogList({ posts, allTags }: BlogListProps) {
 
   return (
     <div>
-      <div className="flex flex-col sm:flex-row gap-3 mb-8">
-        <div className="relative flex-1">
+      <div className="space-y-3 mb-8">
+        <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
           <Input
             type="text"
@@ -61,32 +61,31 @@ export function BlogList({ posts, allTags }: BlogListProps) {
             className="pl-10 h-9"
           />
         </div>
-        <div className="flex flex-wrap items-center gap-1.5">
-          <Badge
-            render={
-              <button type="button" onClick={() => setSelectedTag(null)} />
-            }
-            variant={selectedTag === null ? "default" : "outline"}
-            className="cursor-pointer"
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-none">
+          <button
+            type="button"
+            onClick={() => setSelectedTag(null)}
+            className={`shrink-0 rounded-lg px-3.5 py-1.5 text-sm font-medium transition-colors ${
+              selectedTag === null
+                ? "bg-primary text-primary-foreground"
+                : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+            }`}
           >
             All
-          </Badge>
-          {allTags.slice(0, 6).map((tag) => (
-            <Badge
+          </button>
+          {allTags.map((tag) => (
+            <button
               key={tag}
-              render={
-                <button
-                  type="button"
-                  onClick={() =>
-                    setSelectedTag(selectedTag === tag ? null : tag)
-                  }
-                />
-              }
-              variant={selectedTag === tag ? "default" : "outline"}
-              className="cursor-pointer"
+              type="button"
+              onClick={() => setSelectedTag(selectedTag === tag ? null : tag)}
+              className={`shrink-0 rounded-lg px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                selectedTag === tag
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+              }`}
             >
               {tag}
-            </Badge>
+            </button>
           ))}
         </div>
       </div>
