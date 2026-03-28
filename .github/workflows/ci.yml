@@ -27,6 +27,9 @@ jobs:
       - name: Lint
         run: pnpm lint
 
+      - name: Generate content types
+        run: pnpm velite build
+
       - name: Type check
         run: pnpm tsc --noEmit
 
