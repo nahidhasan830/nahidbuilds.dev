@@ -1,4 +1,4 @@
-export type ProjectStatus = "live" | "in-progress" | "planned";
+export type ProjectStatus = "live" | "in-progress";
 
 export interface Project {
   id: string;
@@ -20,27 +20,5 @@ export const projects: Project[] = [
     status: "live",
     githubUrl: "https://github.com/nahidhasan830/nahidbuilds.dev",
     liveUrl: "https://nahidbuilds.dev",
-  },
-  {
-    id: "skillpulse",
-    title: "SkillPulse",
-    description:
-      "AI-powered job market analyzer that scrapes listings from top tech companies, identifies trending skills, and delivers actionable insights for engineers to stay ahead.",
-    techStack: ["Python", "Scrapy", "Claude API", "FastAPI", "PostgreSQL"],
-    status: "planned",
-  },
-  {
-    id: "scribe",
-    title: "Scribe",
-    description:
-      "Intelligent content engine that researches topics across the web and generates publication-ready articles, LinkedIn posts, and technical blogs with a natural human voice.",
-    techStack: [
-      "TypeScript",
-      "LangChain",
-      "Claude API",
-      "Next.js",
-      "Vercel AI SDK",
-    ],
-    status: "planned",
   },
 ];

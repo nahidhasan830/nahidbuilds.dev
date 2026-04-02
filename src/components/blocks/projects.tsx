@@ -61,11 +61,6 @@ const statusConfig: Record<
     footerText: "Actively developing",
     highlighted: true,
   },
-  planned: {
-    label: "Planned",
-    footerText: "On the roadmap",
-    highlighted: false,
-  },
 };
 
 function ProjectCard({
