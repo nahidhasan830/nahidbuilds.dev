@@ -58,6 +58,7 @@ export function ContactForm({ onSuccess }: { onSuccess?: () => void }) {
             placeholder="John Doe"
             required
             disabled={isPending}
+            autoComplete="off"
           />
         </div>
 
@@ -72,6 +73,7 @@ export function ContactForm({ onSuccess }: { onSuccess?: () => void }) {
             placeholder="john@example.com"
             required
             disabled={isPending}
+            autoComplete="off"
           />
         </div>
       </div>
@@ -87,6 +89,7 @@ export function ContactForm({ onSuccess }: { onSuccess?: () => void }) {
           className="min-h-[120px] resize-none"
           required
           disabled={isPending}
+          autoComplete="off"
         />
       </div>
 
