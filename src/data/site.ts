@@ -2,7 +2,7 @@ export const siteConfig = {
   name: "Nahid Hasan",
   title: "Software Engineer",
 
-  currentlyBuilding: "nahidbuilds.dev",
+  currentlyBuilding: "NahidArbX",
 
   socials: {
     github: "https://github.com/nahidhasan830",
@@ -41,12 +41,6 @@ export const navItems: NavItem[] = [
     href: "/#projects",
     icon: "folder",
     keywords: ["work", "portfolio", "code"],
-  },
-  {
-    label: "Blog",
-    href: "/#blog",
-    icon: "file",
-    keywords: ["posts", "articles", "writing", "thoughts"],
   },
   {
     label: "Now",

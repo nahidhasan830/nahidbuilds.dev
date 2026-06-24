@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, GitBranch, Layers } from "lucide-react";
 import { GithubIcon } from "@/components/icons/github";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils";
 
 function getGridConfig(count: number): {
   gridClass: string;
-  getItemClass: (index: number) => string;
+  getItemClass: (project: Project, index: number) => string;
 } {
   switch (count) {
     case 1:
@@ -27,22 +27,28 @@ function getGridConfig(count: number): {
     case 2:
       return {
         gridClass: "grid grid-cols-1 gap-4 md:grid-cols-2",
-        getItemClass: () => "",
+        getItemClass: (project) =>
+          project.highlights?.length ? "md:col-span-2" : "",
       };
     case 3:
       return {
         gridClass: "grid grid-cols-1 gap-4 md:grid-cols-2",
-        getItemClass: (i) => (i === 0 ? "md:col-span-2" : ""),
+        getItemClass: (project, i) =>
+          project.highlights?.length || i === 0 ? "md:col-span-2" : "",
       };
     case 4:
       return {
         gridClass: "grid grid-cols-1 gap-4 md:grid-cols-2",
-        getItemClass: () => "",
+        getItemClass: (project) =>
+          project.highlights?.length ? "md:col-span-2" : "",
       };
     default:
       return {
         gridClass: "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4",
-        getItemClass: (i) => (i === 0 ? "md:col-span-2 md:row-span-2" : ""),
+        getItemClass: (project, i) =>
+          project.highlights?.length || i === 0
+            ? "md:col-span-2 md:row-span-2"
+            : "",
       };
   }
 }
@@ -72,17 +78,19 @@ function ProjectCard({
 }) {
   const hasLinks = project.githubUrl || project.liveUrl;
   const config = statusConfig[project.status];
+  const isFeatured = Boolean(project.highlights?.length);
 
   return (
     <Card
       className={cn(
         "flex flex-col transition-all duration-150 hover:scale-[1.01]",
+        isFeatured && "gap-5",
         config.highlighted && "ring-2 ring-primary/40",
         className,
       )}
     >
       <CardHeader>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <CardTitle>{project.title}</CardTitle>
           {config.label && (
             <Badge className="border-primary/20 bg-primary/10 text-primary">
@@ -90,10 +98,38 @@ function ProjectCard({
             </Badge>
           )}
         </div>
+        {(project.role || project.period) && (
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs font-medium text-muted-foreground">
+            {project.role && <span>{project.role}</span>}
+            {project.period && <span>{project.period}</span>}
+          </div>
+        )}
         <CardDescription>{project.description}</CardDescription>
+        {project.repository && project.githubUrl && (
+          <a
+            href={project.githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex w-fit items-center gap-1.5 text-xs font-medium text-primary hover:underline"
+          >
+            <GitBranch className="size-3.5" />
+            {project.repository}
+          </a>
+        )}
       </CardHeader>
 
-      <CardContent className="flex-1">
+      <CardContent className="flex flex-1 flex-col gap-5">
+        {project.highlights && (
+          <div className="grid gap-3 text-sm text-muted-foreground md:grid-cols-2">
+            {project.highlights.map((highlight) => (
+              <div key={highlight} className="flex gap-3">
+                <Layers className="mt-0.5 size-4 shrink-0 text-primary" />
+                <p className="leading-relaxed">{highlight}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="flex flex-wrap gap-1.5">
           {project.techStack.map((tech) => (
             <Badge key={tech} variant="secondary">
@@ -153,7 +189,8 @@ export function Projects() {
           Projects
         </h2>
         <p className="max-w-2xl text-lg text-muted-foreground">
-          A selection of projects I've built. Each one taught me something new.
+          A focused build in real-time sports-market analytics, data
+          normalization, and value-bet detection.
         </p>
       </div>
 
@@ -162,7 +199,7 @@ export function Projects() {
           <ProjectCard
             key={project.id}
             project={project}
-            className={gridConfig.getItemClass(index)}
+            className={gridConfig.getItemClass(project, index)}
           />
         ))}
       </div>

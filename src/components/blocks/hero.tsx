@@ -1,6 +1,7 @@
 "use client";
 
 import { FileDown } from "lucide-react";
+import Link from "next/link";
 import { SocialLinks } from "@/components/social-links";
 import { AnimatedBorderButton } from "@/components/ui/animated-border-button";
 import { Badge } from "@/components/ui/badge";
@@ -19,13 +20,15 @@ export function Hero() {
   return (
     <section className="hero-glow min-h-screen pt-16 flex items-center">
       <div className="container px-6 md:px-12 lg:px-24 flex flex-col items-center text-center">
-        <Badge className="mb-6 h-auto gap-2 border-primary/20 bg-primary/10 px-3 py-1.5 text-sm text-primary">
-          <PingDot />
-          Building{" "}
-          <span className="text-foreground">
-            {siteConfig.currentlyBuilding}
-          </span>
-        </Badge>
+        <Link href="/#projects" className="group mb-6 rounded-4xl">
+          <Badge className="h-auto gap-2 border-primary/20 bg-primary/10 px-3 py-1.5 text-sm text-primary transition-colors group-hover:bg-primary/15">
+            <PingDot />
+            Building{" "}
+            <span className="text-foreground">
+              {siteConfig.currentlyBuilding}
+            </span>
+          </Badge>
+        </Link>
 
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-3">
           {siteConfig.name}

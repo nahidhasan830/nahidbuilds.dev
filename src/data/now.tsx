@@ -7,17 +7,9 @@ export const nowSections: InfoSection[] = [
       {
         content: (
           <>
-            <strong className="text-foreground">nahidbuilds.dev</strong> - This
-            portfolio site. Dark-first design, bento layouts, and learning
-            Next.js 16 along the way.
-          </>
-        ),
-      },
-      {
-        content: (
-          <>
-            Planning <strong className="text-foreground">SkillPulse</strong> -
-            An AI-powered job market analyzer to track trending skills.
+            <strong className="text-foreground">NahidArbX</strong> - A real-time
+            sports-market analytics platform for detecting value bets against
+            Pinnacle sharp prices.
           </>
         ),
       },
@@ -43,22 +35,6 @@ export const nowSections: InfoSection[] = [
             for scalable architectures.
           </>
         ),
-      },
-    ],
-  },
-  {
-    title: "Reading",
-    items: [
-      {
-        content: (
-          <>
-            <em>Designing Data-Intensive Applications</em> by Martin Kleppmann
-          </>
-        ),
-      },
-      {
-        content:
-          "Various engineering blogs - ByteByteGo, The Pragmatic Engineer",
       },
     ],
   },
