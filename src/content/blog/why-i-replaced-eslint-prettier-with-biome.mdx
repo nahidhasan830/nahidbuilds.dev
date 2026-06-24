@@ -96,13 +96,15 @@ It shows the file, line, column, the issue, and an actionable fix. ESLint's outp
 Biome sorts imports out of the box. No `eslint-plugin-import` or `@trivago/prettier-plugin-sort-imports`. It just works:
 
 ```tsx
-// Before
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
 import Link from "next/link";
+```
 
-// After (Biome auto-sorted)
+Biome sorts that to:
+
+```tsx
 import type { Metadata } from "next";
 import Link from "next/link";
 import { useState } from "react";

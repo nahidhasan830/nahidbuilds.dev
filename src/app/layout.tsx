@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
 import { ActiveSectionProvider } from "@/components/active-section-context";
 import { CommandPalette } from "@/components/command-palette";
-import { ConsoleMessage } from "@/components/console-message";
 import { ContactDialogProvider } from "@/components/contact-dialog-context";
 import { Footer } from "@/components/footer";
 import { Nav } from "@/components/nav";
@@ -55,7 +54,6 @@ export default function RootLayout({
         <ThemeProvider>
           <ActiveSectionProvider>
             <ContactDialogProvider>
-              <ConsoleMessage />
               <CommandPalette />
               <Toaster position="bottom-right" richColors />
               <Nav />

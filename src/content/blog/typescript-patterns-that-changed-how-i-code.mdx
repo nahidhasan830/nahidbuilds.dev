@@ -16,26 +16,24 @@ I've been writing TypeScript for years, but a few patterns fundamentally changed
 The `satisfies` operator checks that an expression conforms to a type without changing its inferred type. That sounds abstract, so here's why it matters:
 
 ```tsx
-// With type annotation — loses literal types
 const routes: Record<string, string> = {
   home: "/",
   blog: "/blog",
   about: "/about",
 };
 
-routes.hoem; // No error! TypeScript only knows values are `string`
+routes.hoem;
 ```
 
 ```tsx
-// With satisfies — keeps literal types
 const routes = {
   home: "/",
   blog: "/blog",
   about: "/about",
 } satisfies Record<string, string>;
 
-routes.hoem; // Error: Property 'hoem' does not exist
-routes.home; // Type is "/" (literal), not string
+routes.hoem;
+routes.home;
 ```
 
 The `satisfies` version gives you two things: compile-time validation that every value is a string, AND autocomplete on the keys. The type annotation version only gives you the first.
@@ -47,14 +45,11 @@ I use this everywhere for configuration objects, route maps, and theme tokens.
 Instead of modeling state as a bag of optional properties:
 
 ```tsx
-// Fragile — nothing prevents impossible states
 type Request = {
   status: "idle" | "loading" | "success" | "error";
   data?: User[];
   error?: string;
 };
-
-// Can you have data AND error? Is data undefined when status is "success"?
 ```
 
 Use discriminated unions:
@@ -73,9 +68,9 @@ function handleRequest(req: Request) {
     case "loading":
       return <Spinner />;
     case "success":
-      return <UserList users={req.data} />; // data is guaranteed
+      return <UserList users={req.data} />;
     case "error":
-      return <ErrorMessage message={req.error} />; // error is guaranteed
+      return <ErrorMessage message={req.error} />;
   }
 }
 ```
@@ -93,16 +88,16 @@ type HexColor = `#${string}`;
 type EventName = `on${Capitalize<string>}`;
 type CSSUnit = `${number}${"px" | "rem" | "em" | "%"}`;
 
-function setColor(color: HexColor) { /* ... */ }
+function setColor(color: HexColor) {}
 
-setColor("#ff5500"); // OK
-setColor("red");     // Error: not assignable to `#${string}`
+setColor("#ff5500");
+setColor("red");
 
-function setWidth(width: CSSUnit) { /* ... */ }
+function setWidth(width: CSSUnit) {}
 
-setWidth("16px");   // OK
-setWidth("1.5rem"); // OK
-setWidth("16");     // Error: not assignable to CSSUnit
+setWidth("16px");
+setWidth("1.5rem");
+setWidth("16");
 ```
 
 This is zero runtime overhead — the validation happens entirely at compile time. I find it particularly useful for API route paths, CSS values, and environment variable names.
@@ -112,20 +107,18 @@ This is zero runtime overhead — the validation happens entirely at compile tim
 When you define an array or object, TypeScript widens the types by default:
 
 ```tsx
-const sizes = ["sm", "md", "lg"]; // type: string[]
-const config = { theme: "dark", lang: "en" }; // type: { theme: string, lang: string }
+const sizes = ["sm", "md", "lg"];
+const config = { theme: "dark", lang: "en" };
 ```
 
 Adding `as const` preserves the literal types and makes everything readonly:
 
 ```tsx
 const sizes = ["sm", "md", "lg"] as const;
-// type: readonly ["sm", "md", "lg"]
 
-type Size = (typeof sizes)[number]; // "sm" | "md" | "lg"
+type Size = (typeof sizes)[number];
 
 const config = { theme: "dark", lang: "en" } as const;
-// type: { readonly theme: "dark", readonly lang: "en" }
 ```
 
 The `typeof sizes[number]` pattern is my favorite — it derives a union type directly from an array value. Define your data once, get the type for free. No manual sync between a `const` array and a `type` union.

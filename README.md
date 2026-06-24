@@ -34,13 +34,13 @@ pnpm dev
 
 ```
 src/
-├── app/           # Pages and API routes
+├── app/
 ├── components/
-│   ├── ui/        # shadcn/ui primitives
-│   ├── blocks/    # Page sections
-│   └── icons/     # SVG icons
-├── data/          # Static data
-└── lib/           # Utilities
+│   ├── ui/
+│   ├── blocks/
+│   └── icons/
+├── data/
+└── lib/
 ```
 
 ## Workflow

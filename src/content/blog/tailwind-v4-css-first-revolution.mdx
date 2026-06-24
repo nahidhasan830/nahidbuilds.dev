@@ -73,7 +73,7 @@ No plugin needed. Just use `@container`:
 ```html
 <div className="@container">
   <div className="@sm:flex @lg:grid @lg:grid-cols-2">
-    {/* Layout adapts to container width, not viewport */}
+    <CardGrid />
   </div>
 </div>
 ```
@@ -84,7 +84,7 @@ This is huge for component libraries where you don't control the viewport but ne
 
 ```html
 <div className="rotate-x-12 rotate-y-6 perspective-800">
-  {/* Native 3D transform utilities */}
+  <ProductPreview />
 </div>
 ```
 
@@ -94,7 +94,7 @@ Entrance animations without JavaScript:
 
 ```html
 <div className="starting:opacity-0 starting:scale-95 transition-all duration-300">
-  {/* Animates in when mounted */}
+  <Toast />
 </div>
 ```
 

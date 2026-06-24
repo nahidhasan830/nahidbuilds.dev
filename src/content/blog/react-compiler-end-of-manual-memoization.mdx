@@ -52,13 +52,15 @@ The compiler assumes your code follows the Rules of React. When it can't prove t
 ### Mutating props or state directly
 
 ```tsx
-// The compiler will skip this component
 function BadComponent({ items }) {
-  items.sort((a, b) => a.name.localeCompare(b.name)); // mutating props!
+  items.sort((a, b) => a.name.localeCompare(b.name));
   return <List data={items} />;
 }
+```
 
-// Fix: create a new array
+Create a new array instead:
+
+```tsx
 function GoodComponent({ items }) {
   const sorted = [...items].sort((a, b) => a.name.localeCompare(b.name));
   return <List data={sorted} />;
@@ -68,9 +70,8 @@ function GoodComponent({ items }) {
 ### Side effects during render
 
 ```tsx
-// console.log in render causes the compiler to bail
 function DebugComponent({ value }) {
-  console.log("rendered with", value); // side effect in render
+  analytics.track("rendered", value);
   return <span>{value}</span>;
 }
 ```
@@ -78,9 +79,8 @@ function DebugComponent({ value }) {
 ### Reading refs during render
 
 ```tsx
-// Refs are mutable — the compiler can't track them
 function Broken({ ref }) {
-  const value = ref.current; // unsafe during render
+  const value = ref.current;
   return <span>{value}</span>;
 }
 ```
@@ -118,7 +118,6 @@ The practical approach:
 In Next.js 16, the React Compiler is available as a stable feature:
 
 ```ts
-// next.config.ts
 const nextConfig = {
   reactCompiler: true,
 };

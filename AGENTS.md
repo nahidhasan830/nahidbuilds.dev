@@ -1,10 +1,14 @@
-<!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
 
-<!-- VERCEL BEST PRACTICES START -->
+## Code Style Rules
+
+- Do not add comments in code.
+- Prefer clear names, small reusable functions, and simple module boundaries over explanatory comments.
+- If code is hard enough to need a comment, refactor it first.
+- Do not commit AI tool folders, prompt scratch files, or generated agent artifacts.
+
 ## Best practices for developing on Vercel
 
 These defaults are optimized for AI coding agents (and humans) working on apps that deploy to Vercel.
@@ -27,4 +31,3 @@ These defaults are optimized for AI coding agents (and humans) working on apps t
 - Use AI Gateway for model routing, set AI_GATEWAY_API_KEY, using a model string (e.g. 'anthropic/claude-sonnet-4.6'), Gateway is already default in AI SDK
   needed. Always curl https://ai-gateway.vercel.sh/v1/models first; never trust model IDs from memory
 - For durable agent loops or untrusted code: use Workflow (pause/resume/state) + Sandbox; use Vercel MCP for secure infra access
-<!-- VERCEL BEST PRACTICES END -->

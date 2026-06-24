@@ -28,34 +28,34 @@ Before installing any third-party packages, we always research through the inter
 ```
 src/
 ├── app/
-│   ├── layout.tsx          # Root layout
-│   ├── page.tsx            # Homepage
+│   ├── layout.tsx
+│   ├── page.tsx
 │   ├── blog/
-│   │   ├── page.tsx        # Blog listing
+│   │   ├── page.tsx
 │   │   └── [slug]/
-│   │       └── page.tsx    # Individual blog post
+│   │       └── page.tsx
 │   └── projects/
-│       └── page.tsx        # Projects listing
+│       └── page.tsx
 ├── components/
-│   ├── ui/                 # Raw shadcn primitives (untouched)
-│   ├── blocks/             # Product-level compositions
+│   ├── ui/
+│   ├── blocks/
 │   ├── nav.tsx
 │   └── footer.tsx
 ├── content/
-│   └── blog/               # MDX blog posts (add later)
+│   └── blog/
 ├── data/
-│   └── projects.ts         # Project data
+│   └── projects.ts
 └── lib/
-    └── utils.ts            # cn() helper and utilities
+    └── utils.ts
 ```
 
 ## Commands
 
 ```bash
-pnpm dev         # Start development server (Turbopack)
-pnpm build       # Production build
-pnpm lint        # Run Biome linter
-pnpm format      # Format with Biome
+pnpm dev
+pnpm build
+pnpm lint
+pnpm format
 ```
 
 ## Git Workflow
@@ -135,7 +135,6 @@ Unique portfolio elements prioritized by impact and effort.
 - [ ] **"Currently building" status** — dynamic line in hero showing active project
 - [ ] **/now page** — what you're working on, learning, reading
 - [ ] **/uses page** — your tools, hardware, software setup
-- [ ] **Console easter egg** — styled message when devtools open
 
 ### Phase 3: Polish
 
@@ -158,4 +157,7 @@ Unique portfolio elements prioritized by impact and effort.
 
 ## Rules
 
-- Do not add unnecessary comment while writing code. Only make comment when it is really necessary. i.e the code is really super hard to understand
+- Do not add comments while writing code.
+- Prefer clear names, small reusable functions, and simple module boundaries over explanatory comments.
+- If code is hard enough to need a comment, refactor it first.
+- Do not commit AI tool folders, prompt scratch files, or generated agent artifacts.

@@ -69,7 +69,6 @@ export default async function PostPage({ params }: PostPageProps) {
 
       <div className="xl:grid xl:grid-cols-[1fr_12rem] xl:gap-10">
         <div>
-          {/* Post Header */}
           <header className="mb-10 pb-8 border-b border-border">
             {post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-4">
@@ -101,7 +100,6 @@ export default async function PostPage({ params }: PostPageProps) {
             </div>
           </header>
 
-          {/* Article Content */}
           <article>
             <div className="prose dark:prose-invert max-w-none prose-headings:tracking-tight prose-a:text-primary prose-blockquote:border-primary">
               <MDXContent code={post.body} />
@@ -117,7 +115,6 @@ export default async function PostPage({ params }: PostPageProps) {
           </article>
         </div>
 
-        {/* TOC — sticky in right column */}
         <aside className="hidden xl:block">
           <div className="sticky top-24">
             <TableOfContents toc={post.toc} />

@@ -57,7 +57,6 @@ function TimelineItem({
 
   return (
     <div className="flex gap-4 md:gap-6 lg:gap-8">
-      {/* Left: Date info - hidden on mobile */}
       <div className="hidden w-36 shrink-0 pt-1 text-right md:block lg:w-44">
         <p className="text-sm font-medium text-foreground">{dateRange}</p>
         <p className="text-sm text-muted-foreground">{duration}</p>
@@ -68,7 +67,6 @@ function TimelineItem({
         )}
       </div>
 
-      {/* Center: Timeline */}
       <div className="flex flex-col items-center">
         {isCurrent ? (
           <span className="relative z-10 flex size-4 shrink-0">
@@ -81,7 +79,6 @@ function TimelineItem({
         {!isLast && <div className="w-0.5 grow bg-border" />}
       </div>
 
-      {/* Right: Content card */}
       <div className={cn("flex-1 pb-6 sm:pb-8 md:pb-10", isLast && "pb-0")}>
         <div
           className={cn(
@@ -89,7 +86,6 @@ function TimelineItem({
             isCurrent ? "border-primary/30" : "border-border",
           )}
         >
-          {/* Mobile date - shown only on mobile */}
           <div className="mb-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground md:hidden">
             <span>{dateRange}</span>
             <span>·</span>

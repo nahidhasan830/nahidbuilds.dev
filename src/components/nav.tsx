@@ -1,19 +1,16 @@
 "use client";
 
-import { Mail, Menu, Moon, Sun, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useActiveSection } from "@/components/active-section-context";
-import { useContactDialog } from "@/components/contact-dialog-context";
-import { GithubIcon } from "@/components/icons/github";
-import { LinkedinIcon } from "@/components/icons/linkedin";
-import { useTheme } from "@/components/theme-provider";
+import { BrandMark } from "@/components/brand-mark";
+import { SocialLinks } from "@/components/social-links";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { navItems, siteConfig } from "@/data/site";
+import { visibleNavItems } from "@/data/site";
 import { cn } from "@/lib/utils";
-
-const visibleNavItems = navItems.filter((item) => item.showInNav !== false);
 
 function useIsActive() {
   const pathname = usePathname();
@@ -33,13 +30,14 @@ function useIsActive() {
 export function Nav() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const { resolvedTheme, toggleTheme } = useTheme();
-  const { openContactDialog } = useContactDialog();
+  const previousPathname = useRef(pathname);
   const isActive = useIsActive();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: intentionally run on pathname change
   useEffect(() => {
-    setIsOpen(false);
+    if (previousPathname.current !== pathname) {
+      setIsOpen(false);
+      previousPathname.current = pathname;
+    }
   }, [pathname]);
 
   useEffect(() => {
@@ -65,13 +63,7 @@ export function Nav() {
     <>
       <header className="fixed top-0 left-0 right-0 z-50 h-16 border-b border-border/50 bg-background/80 backdrop-blur-sm">
         <nav className="container h-full flex items-center justify-between px-6 md:px-12 lg:px-24">
-          <Link
-            href="/"
-            className="group flex items-center justify-center size-9 rounded-lg bg-primary/10 text-primary font-bold text-lg transition-all duration-150 hover:bg-primary hover:text-primary-foreground"
-            aria-label="Home"
-          >
-            N
-          </Link>
+          <BrandMark className="size-9 text-lg" />
 
           <div className="hidden md:flex items-center gap-6">
             <ul className="flex items-center gap-6">
@@ -91,42 +83,11 @@ export function Nav() {
               ))}
             </ul>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              aria-label={
-                resolvedTheme === "dark"
-                  ? "Switch to light mode"
-                  : "Switch to dark mode"
-              }
-              className="size-9"
-            >
-              {resolvedTheme === "dark" ? (
-                <Sun className="size-4" />
-              ) : (
-                <Moon className="size-4" />
-              )}
-            </Button>
+            <ThemeToggle className="size-9" />
           </div>
 
           <div className="flex items-center gap-1 md:hidden">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              aria-label={
-                resolvedTheme === "dark"
-                  ? "Switch to light mode"
-                  : "Switch to dark mode"
-              }
-            >
-              {resolvedTheme === "dark" ? (
-                <Sun className="size-4" />
-              ) : (
-                <Moon className="size-4" />
-              )}
-            </Button>
+            <ThemeToggle />
             <Button
               variant="ghost"
               size="icon"
@@ -140,7 +101,6 @@ export function Nav() {
         </nav>
       </header>
 
-      {/* Full-screen mobile menu overlay */}
       <div
         className={cn(
           "fixed inset-0 z-50 flex flex-col bg-background/95 backdrop-blur-md transition-all duration-300 md:hidden",
@@ -150,39 +110,18 @@ export function Nav() {
         )}
         aria-hidden={!isOpen}
       >
-        {/* Ambient glow */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-primary/10 rounded-full blur-3xl" />
         </div>
 
-        {/* Header row matching nav layout */}
         <div className="relative h-16 flex items-center justify-between px-6">
-          <Link
-            href="/"
-            className="flex items-center justify-center size-9 rounded-lg bg-primary/10 text-primary font-bold text-lg"
-            aria-label="Home"
+          <BrandMark
+            className="size-9 text-lg"
             onClick={() => setIsOpen(false)}
-          >
-            N
-          </Link>
+          />
 
           <div className="flex items-center gap-1">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={toggleTheme}
-              aria-label={
-                resolvedTheme === "dark"
-                  ? "Switch to light mode"
-                  : "Switch to dark mode"
-              }
-            >
-              {resolvedTheme === "dark" ? (
-                <Sun className="size-4" />
-              ) : (
-                <Moon className="size-4" />
-              )}
-            </Button>
+            <ThemeToggle />
             <Button
               variant="ghost"
               size="icon"
@@ -194,7 +133,6 @@ export function Nav() {
           </div>
         </div>
 
-        {/* Centered navigation links */}
         <nav className="relative flex-1 flex items-center justify-center">
           <ul className="flex flex-col items-center gap-6">
             {visibleNavItems.map((item, index) => (
@@ -226,7 +164,6 @@ export function Nav() {
           </ul>
         </nav>
 
-        {/* Social links at bottom */}
         <div
           className={cn(
             "relative pb-12 flex justify-center gap-2 transition-all duration-300",
@@ -238,37 +175,7 @@ export function Nav() {
               : "0ms",
           }}
         >
-          <Button variant="ghost" size="icon" asChild>
-            <a
-              href={siteConfig.socials.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-            >
-              <GithubIcon className="size-5" />
-            </a>
-          </Button>
-          <Button variant="ghost" size="icon" asChild>
-            <a
-              href={siteConfig.socials.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-            >
-              <LinkedinIcon className="size-5" />
-            </a>
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => {
-              setIsOpen(false);
-              openContactDialog();
-            }}
-            aria-label="Email"
-          >
-            <Mail className="size-5" />
-          </Button>
+          <SocialLinks iconSize="size-5" onAction={() => setIsOpen(false)} />
         </div>
       </div>
     </>

@@ -17,9 +17,9 @@ export const siteConfig = {
 export type NavItem = {
   label: string;
   href: string;
-  icon: "home" | "folder" | "user" | "file" | "mail"; // Icon keys
-  keywords?: string[]; // For command palette fuzzy search
-  showInNav?: boolean; // Some items only in command palette
+  icon: "home" | "folder" | "user" | "file" | "mail";
+  keywords?: string[];
+  showInNav?: boolean;
 };
 
 export const navItems: NavItem[] = [
@@ -28,7 +28,7 @@ export const navItems: NavItem[] = [
     href: "/",
     icon: "home",
     keywords: ["start", "index", "main"],
-    showInNav: false, // Logo handles this in nav
+    showInNav: false,
   },
   {
     label: "Experience",
@@ -61,3 +61,7 @@ export const navItems: NavItem[] = [
     keywords: ["setup", "tools", "gear", "hardware", "software", "stack"],
   },
 ];
+
+export const visibleNavItems = navItems.filter(
+  (item) => item.showInNav !== false,
+);
