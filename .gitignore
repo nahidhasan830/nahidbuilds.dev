@@ -63,6 +63,8 @@ next-env.d.ts
 .mcp.*.json
 CLAUDE.local.md
 AGENTS.local.md
+CLAUDE.md
+AGENTS.md
 GEMINI.local.md
 QWEN.local.md
 .github/copilot-instructions.md
