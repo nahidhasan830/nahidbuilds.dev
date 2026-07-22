@@ -12,7 +12,8 @@ export const siteConfig = {
     email: "nahidhasan830@gmail.com",
   },
 
-  resumeUrl: "/resume.pdf",
+  resumeUrl:
+    "https://drive.google.com/uc?export=download&id=1dWbYI3e4vC49nQrTX2QGjjuEZmMuui01",
 } as const;
 
 export type NavItem = {
