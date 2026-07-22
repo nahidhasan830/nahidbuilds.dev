@@ -7,9 +7,10 @@ export const nowSections: InfoSection[] = [
       {
         content: (
           <>
-            <strong className="text-foreground">NahidArbX</strong> - A real-time
+            <strong className="text-foreground">NahidArbX</strong> — a real-time
             sports-market analytics platform for detecting value bets against
-            Pinnacle sharp prices.
+            Pinnacle sharp prices, built through an agentic engineering
+            workflow.
           </>
         ),
       },
@@ -21,9 +22,10 @@ export const nowSections: InfoSection[] = [
       {
         content: (
           <>
-            Deep-diving into{" "}
-            <strong className="text-foreground">AI/LLM integration</strong> -
-            Claude API, LangChain, building practical AI tools.
+            Deepening{" "}
+            <strong className="text-foreground">agentic engineering</strong> —
+            directing Claude Code, OpenAI Codex, and related tools with clear
+            specs and architecture to ship production-ready software.
           </>
         ),
       },

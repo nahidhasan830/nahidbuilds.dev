@@ -61,14 +61,23 @@ export const usesSections: InfoSection[] = [
             >
               One Dark Pro
             </ExternalLink>{" "}
-            theme - my daily driver for all coding.
+            theme — my daily driver for all coding.
           </>
         ),
       },
       {
         content: (
           <>
-            <strong className="text-foreground">Terminal.app</strong> -
+            <strong className="text-foreground">Agentic tooling</strong> —
+            Claude Code, OpenAI Codex, Cursor, and Grok Build for spec-driven,
+            AI-assisted implementation.
+          </>
+        ),
+      },
+      {
+        content: (
+          <>
+            <strong className="text-foreground">Terminal.app</strong> —
             Mac&apos;s built-in terminal. Simple and gets the job done.
           </>
         ),
@@ -82,7 +91,7 @@ export const usesSections: InfoSection[] = [
             >
               MonoLisa Variable
             </ExternalLink>{" "}
-            - Clean, readable font with great ligatures.
+            — clean, readable font with great ligatures.
           </>
         ),
       },

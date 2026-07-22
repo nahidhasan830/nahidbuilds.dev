@@ -1,4 +1,5 @@
 import { differenceInMonths, format, parseISO } from "date-fns";
+import { FormattedText } from "@/components/formatted-text";
 import { Badge } from "@/components/ui/badge";
 import { Section } from "@/components/ui/section";
 import {
@@ -22,26 +23,6 @@ function getDuration(start: string, end: string | null): string {
   if (years === 0) return `${months} mo`;
   if (months === 0) return years === 1 ? `${years} yr` : `${years} yrs`;
   return `${years} yr ${months} mo`;
-}
-
-function FormattedText({ text }: { text: string }) {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g);
-
-  return (
-    <>
-      {parts.map((part) => {
-        if (part.startsWith("**") && part.endsWith("**")) {
-          const content = part.slice(2, -2);
-          return (
-            <strong key={content} className="font-semibold text-foreground">
-              {content}
-            </strong>
-          );
-        }
-        return <span key={part}>{part}</span>;
-      })}
-    </>
-  );
 }
 
 function TimelineItem({
@@ -149,7 +130,8 @@ export function Experience() {
         </h2>
         <p className="max-w-2xl text-sm text-muted-foreground sm:text-base md:text-lg">
           4+ years building full-stack features for traffic analytics and road
-          safety platforms, serving public and private sector clients.
+          safety platforms — shipping production software with agentic
+          engineering workflows.
         </p>
       </div>
 

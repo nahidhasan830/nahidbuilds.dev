@@ -34,8 +34,12 @@ export function Hero() {
           {siteConfig.name}
         </h1>
 
-        <p className="text-xl md:text-2xl text-foreground/60 mb-10">
+        <p className="text-xl md:text-2xl text-foreground/60 mb-4">
           {siteConfig.title}
+        </p>
+
+        <p className="max-w-2xl text-sm text-muted-foreground sm:text-base mb-10">
+          {siteConfig.summary}
         </p>
 
         <div className="flex flex-wrap items-center gap-4">

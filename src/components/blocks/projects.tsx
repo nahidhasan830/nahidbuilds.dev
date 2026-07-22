@@ -1,4 +1,5 @@
 import { ExternalLink, GitBranch, Layers } from "lucide-react";
+import { FormattedText } from "@/components/formatted-text";
 import { GithubIcon } from "@/components/icons/github";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -124,7 +125,9 @@ function ProjectCard({
             {project.highlights.map((highlight) => (
               <div key={highlight} className="flex gap-3">
                 <Layers className="mt-0.5 size-4 shrink-0 text-primary" />
-                <p className="leading-relaxed">{highlight}</p>
+                <p className="leading-relaxed">
+                  <FormattedText text={highlight} />
+                </p>
               </div>
             ))}
           </div>

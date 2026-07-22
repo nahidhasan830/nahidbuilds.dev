@@ -22,8 +22,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nahid Hasan | Software Engineer",
-  description: "Software Engineer portfolio",
+  title: "Nahid Hasan | Full-Stack Software Engineer",
+  description:
+    "Frontend-focused Full-Stack Software Engineer with 4+ years of remote experience building scalable web apps with React, TypeScript, Node.js, and AWS.",
 };
 
 const themeScript = `

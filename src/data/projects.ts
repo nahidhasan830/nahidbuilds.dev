@@ -24,10 +24,11 @@ export const projects: Project[] = [
     period: "September 2025 - Present",
     repository: "github.com/nahidhasan830/nahidArbX",
     highlights: [
-      "Built a 4-phase pipeline for fixtures, event matching, market normalization, and value-bet detection against Pinnacle sharp prices.",
-      "Architected a 2-process TypeScript system with a Next.js frontend, standalone engine, PostgreSQL database, Drizzle ORM, and reactive detection using a 500ms debounce.",
-      "Integrated 4+ betting data providers including Pinnacle, NineWickets, Velki, and SABA, with normalized fixtures, markets, odds, event matching, and value-bet calculations.",
-      "Built an ML training pipeline using LightGBM, Google Cloud SQL, and Cloud Run Jobs to support model retraining and betting performance analysis.",
+      "Designed a **4-phase processing pipeline** for fixture ingestion, event matching, market normalization, and value-bet detection against Pinnacle sharp prices.",
+      "Built the platform through an **agentic engineering workflow**, authoring system architecture and specifications while directing **Claude Code and OpenAI Codex** throughout implementation.",
+      "Architected a **2-process TypeScript system** using Next.js, PostgreSQL, Drizzle ORM, and a standalone detection engine.",
+      "Integrated **4+ betting data providers** including Pinnacle, NineWickets, Velki, and SABA, with normalized fixtures, markets, odds, event matching, and value-bet calculations.",
+      "Built an **ML training pipeline** using LightGBM, Cloud SQL, and Cloud Run Jobs for automated model retraining.",
     ],
     techStack: [
       "Next.js",

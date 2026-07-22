@@ -1,6 +1,8 @@
 export const siteConfig = {
   name: "Nahid Hasan",
-  title: "Software Engineer",
+  title: "Frontend-focused Full-Stack Software Engineer",
+  summary:
+    "4+ years of remote experience building scalable web applications with React, TypeScript, Node.js, and AWS — leveraging agentic engineering to ship production-ready software efficiently.",
 
   currentlyBuilding: "NahidArbX",
 
@@ -10,8 +12,7 @@ export const siteConfig = {
     email: "nahidhasan830@gmail.com",
   },
 
-  resumeUrl:
-    "https://drive.google.com/uc?export=download&id=1dWbYI3e4vC49nQrTX2QGjjuEZmMuui01",
+  resumeUrl: "/resume.pdf",
 } as const;
 
 export type NavItem = {
